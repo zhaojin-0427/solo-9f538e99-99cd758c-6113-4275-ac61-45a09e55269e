@@ -93,10 +93,12 @@ def index():
     with db.read_snapshot(conn):
         devices = service.list_devices(conn)
         firmwares = service.list_firmwares(conn)
+        totals = service.totals(conn)
     return render_template(
         "index.html",
         devices=devices,
         firmwares=firmwares,
+        totals=totals,
         word_orders=decoder.WORD_ORDERS,
         max_batch=decoder.MAX_BATCH,
     )
@@ -116,7 +118,8 @@ def upload():
         )
 
     flash(
-        "上传完成：共 %d 帧，新增 %d（有效 %d，无效 %d，待解 %d），沿用 %d。"
+        "上传完成：共 %d 帧，新增帧 %d（有效 %d，无效 %d，待解 %d），沿用 %d；"
+        "新载荷 %d 份（同固件号同原始字只存一份、共用解码结果）。"
         % (
             summary["received"],
             summary["inserted"],
@@ -124,6 +127,7 @@ def upload():
             summary["invalid"],
             summary["pending"],
             summary["reused"],
+            summary["new_payloads"],
         ),
         "success",
     )
@@ -152,11 +156,12 @@ def register_firmware():
     if result["already_registered"]:
         if result["backfilled"]:
             flash(
-                "固件 %s 已登记为「%s」，本次补解遗留待解帧 %d 帧。"
+                "固件 %s 已登记为「%s」，本次补解遗留待解载荷 %d 份、关联帧 %d 帧。"
                 % (
                     fw_version,
                     decoder.WORD_ORDERS[result["word_order"]],
                     result["backfilled"],
+                    result["frames_backfilled"],
                 ),
                 "success",
             )
@@ -164,13 +169,14 @@ def register_firmware():
             flash("固件 %s 已登记，字序未变。" % fw_version, "info")
     else:
         flash(
-            "固件 %s 已登记为「%s」，补解 %d 帧（有效 %d，无效 %d）。"
+            "固件 %s 已登记为「%s」，补解载荷 %d 份（有效 %d，无效 %d），关联帧 %d 帧。"
             % (
                 fw_version,
                 decoder.WORD_ORDERS[result["word_order"]],
                 result["backfilled"],
                 result["decoded"],
                 result["invalid"],
+                result["frames_backfilled"],
             ),
             "success",
         )

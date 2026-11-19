@@ -6,7 +6,7 @@
   <table>
     <thead>
       <tr><th>帧号</th><th>固件号</th><th>原始字</th><th>状态</th><th>读数</th>
-          <th>字序</th><th>解码位型</th><th>收到时间</th></tr>
+          <th>字序</th><th>解码位型</th><th>收到时间</th><th>解码时间</th></tr>
     </thead>
     <tbody>
     {% for f in frames %}
@@ -19,6 +19,7 @@
         <td>{{ word_orders.get(f.word_order, f.word_order or '—') }}</td>
         <td class="mono">{{ f.bit_pattern or '—' }}</td>
         <td class="muted">{{ f.received_at }}</td>
+        <td class="muted">{{ f.decoded_at or '—' }}</td>
       </tr>
     {% endfor %}
     </tbody>

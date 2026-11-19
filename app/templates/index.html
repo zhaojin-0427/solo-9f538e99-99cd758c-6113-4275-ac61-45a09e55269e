@@ -2,6 +2,15 @@
 {% block content %}
 
 <section>
+  <h2>数据概览</h2>
+  <p class="muted">
+    实际帧数 <strong>{{ totals.frame_count }}</strong> 帧，
+    载荷份数 <strong>{{ totals.payload_count }}</strong> 份
+    （固件号与原始字都相同的载荷只存一份、共用解码结果）。
+  </p>
+</section>
+
+<section>
   <h2>上传测量帧 CSV</h2>
   <p class="muted">
     每行 4 列：设备号,帧号,固件号,8 位十六进制原始字（如 <span class="mono">3F800000</span>）。
@@ -33,12 +42,13 @@
   <h2>已登记固件</h2>
   {% if firmwares %}
   <table>
-    <thead><tr><th>固件号</th><th>字序</th><th>帧数</th><th>待解</th><th>登记时间</th></tr></thead>
+    <thead><tr><th>固件号</th><th>字序</th><th>载荷份数</th><th>帧数</th><th>待解载荷</th><th>登记时间</th></tr></thead>
     <tbody>
     {% for fw in firmwares %}
       <tr>
         <td class="mono">{{ fw.fw_version }}</td>
         <td>{{ word_orders.get(fw.word_order, fw.word_order) }}</td>
+        <td>{{ fw.payload_count }}</td>
         <td>{{ fw.frame_count }}</td>
         <td>{{ fw.pending_count or 0 }}</td>
         <td class="muted">{{ fw.registered_at }}</td>
@@ -55,12 +65,13 @@
   <h2>设备</h2>
   {% if devices %}
   <table>
-    <thead><tr><th>设备号</th><th>帧数</th><th>待解</th><th>最近收到</th></tr></thead>
+    <thead><tr><th>设备号</th><th>帧数</th><th>载荷份数</th><th>待解</th><th>最近收到</th></tr></thead>
     <tbody>
     {% for d in devices %}
       <tr>
         <td><a href="{{ url_for('main.device', device_id=d.device_id) }}">{{ d.device_id }}</a></td>
         <td>{{ d.frame_count }}</td>
+        <td>{{ d.payload_count }}</td>
         <td>{{ d.pending_count or 0 }}</td>
         <td class="muted">{{ d.last_seen }}</td>
       </tr>

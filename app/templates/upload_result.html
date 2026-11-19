@@ -3,9 +3,10 @@
 <section>
   <h2>上传结果</h2>
   <p>
-    共 {{ summary.received }} 帧：新增 {{ summary.inserted }}，
+    共 {{ summary.received }} 帧：新增帧 {{ summary.inserted }}，
     有效 {{ summary.decoded }}，无效 {{ summary.invalid }}，待解 {{ summary.pending }}，
-    沿用已有结果 {{ summary.reused }}。
+    沿用已有结果 {{ summary.reused }}；本批新增载荷 {{ summary.new_payloads }} 份
+    （同固件号同原始字只存一份、共用解码结果）。
   </p>
   <table>
     <thead><tr><th>设备号</th><th>帧号</th><th>固件号</th><th>原始字</th><th>状态</th><th>读数</th><th>解码位型</th><th>本批</th></tr></thead>
