@@ -1,0 +1,14 @@
+services:
+  frame-viewer:
+    build: .
+    ports:
+      - "8000:8000"
+    volumes:
+      - frame-data:/data
+    environment:
+      DATA_DIR: /data
+      SECRET_KEY: change-me-in-production
+    restart: unless-stopped
+
+volumes:
+  frame-data:

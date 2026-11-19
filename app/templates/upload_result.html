@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block content %}
+<section>
+  <h2>上传结果</h2>
+  <p>
+    共 {{ summary.received }} 帧：新增 {{ summary.inserted }}，
+    有效 {{ summary.decoded }}，无效 {{ summary.invalid }}，待解 {{ summary.pending }}，
+    沿用已有结果 {{ summary.reused }}。
+  </p>
+  <table>
+    <thead><tr><th>设备号</th><th>帧号</th><th>固件号</th><th>原始字</th><th>状态</th><th>读数</th><th>解码位型</th><th>本批</th></tr></thead>
+    <tbody>
+    {% for r in frames %}
+      <tr>
+        <td>{{ r.device_id }}</td>
+        <td>{{ r.frame_no }}</td>
+        <td class="mono">{{ r.fw_version }}</td>
+        <td class="mono">{{ r.raw_word }}</td>
+        <td><span class="badge {{ r.status }}">{{ r.status | status_label }}</span></td>
+        <td>{{ r.reading | reading_fmt }}</td>
+        <td class="mono">{{ r.bit_pattern or '—' }}</td>
+        <td>{{ '新增' if (r.device_id, r.frame_no) in inserted else '沿用' }}</td>
+      </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+  <p><a href="{{ url_for('main.index') }}">返回首页</a></p>
+</section>
+{% endblock %}

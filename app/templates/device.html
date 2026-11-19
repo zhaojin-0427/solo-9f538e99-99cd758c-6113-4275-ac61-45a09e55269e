@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block content %}
+<section>
+  <h2>设备 {{ device_id }} 的测量帧</h2>
+  <p><a href="{{ url_for('main.index') }}">返回首页</a> · <a href="{{ url_for('main.api_device', device_id=device_id) }}">JSON</a></p>
+  <table>
+    <thead>
+      <tr><th>帧号</th><th>固件号</th><th>原始字</th><th>状态</th><th>读数</th>
+          <th>字序</th><th>解码位型</th><th>收到时间</th></tr>
+    </thead>
+    <tbody>
+    {% for f in frames %}
+      <tr>
+        <td>{{ f.frame_no }}</td>
+        <td class="mono">{{ f.fw_version }}</td>
+        <td class="mono">{{ f.raw_word }}</td>
+        <td><span class="badge {{ f.status }}">{{ f.status | status_label }}</span></td>
+        <td>{{ f.reading | reading_fmt }}</td>
+        <td>{{ word_orders.get(f.word_order, f.word_order or '—') }}</td>
+        <td class="mono">{{ f.bit_pattern or '—' }}</td>
+        <td class="muted">{{ f.received_at }}</td>
+      </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+</section>
+{% endblock %}
